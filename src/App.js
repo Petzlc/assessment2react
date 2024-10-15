@@ -13,7 +13,7 @@ export default function App() {
     // console.log('Suche nach:', searchQuery);
     try {
       const response = await axios.get(
-        'https://marketplace.sshopencloud.eu/item-search',
+        'https://marketplace-api.sshopencloud.eu/api/item-search',
         {
           params: {
             q: searchQuery,
@@ -41,12 +41,12 @@ export default function App() {
           // Aktualisiert den State bei Eingabe
           onChange={(event) => setSearchQuery(event.target.value)}
         />
-        <button onClick={handelSearch}>Suche</button>
+        <button onClick={handelSearch}>Search</button>
       </div>
 
       {/* Results list */}
       <div>
-        <h2>Ergebnisse</h2>
+        <h2>Search results</h2>
         <ul>
           {results.map((item) => (
             <li key={item.id}>
@@ -63,7 +63,7 @@ export default function App() {
       {/* Pagination */}
       <div>
         <button>{'<'}</button>
-        <span>Seite 1 von 10</span>
+        <span>Page 1 of 10</span>
         <button>{'>'}</button>
       </div>
     </div>
