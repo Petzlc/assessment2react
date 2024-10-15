@@ -1,5 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+// Router Setup
+import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
+import ItemDetail from './ItemDetail';
 
 export default function App() {
   // set state for the input in the searchbar
@@ -78,62 +81,79 @@ export default function App() {
   };
 
   return (
-    <div>
-      <h1>Social Sciences & Humanities Open Marketplace</h1>
-
-      {/* Search field */}
+    // Router configuration
+    <>
+      <Router>
+        <Routes>
+          {/* Main page with search bar */}
+          <Route path="/" element={<SearchView />} />
+          {/*  detail view for certain items */}
+          <Route path="/tools-services/:id" element={<ItemDetail />} />
+        </Routes>
+      </Router>
       <div>
-        <input
-          type="text"
-          placeholder="Suchbegriff eingeben..."
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-        />
-        <button onClick={handelSearch}>Search</button>
-      </div>
+        <h1>Social Sciences & Humanities Open Marketplace</h1>
 
-      {/* Choose page size */}
-      <div>
-        <label htmlFor="pageSize">Results per Page</label>
-        <select id="pageSize" value={pageSize} onChange={handlePageSizeChange}>
-          <option value={2}>2</option>
-          <option value={4}>4</option>
-          <option value={8}>8</option>
-        </select>
-      </div>
+        {/* Search field */}
+        <div>
+          <input
+            type="text"
+            placeholder="Suchbegriff eingeben..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+          />
+          <button onClick={handelSearch}>Search</button>
+        </div>
 
-      {/* Results list */}
-      <div>
-        <h2>Search results</h2>
-        <ul>
-          {getPaginatedResults().length > 0 ? (
-            getPaginatedResults().map((item) => (
-              <li key={item.id}>
-                <strong>{item.label}</strong>
-                <br />
-                Accessible at: {item.accessibleAt}
-                <br />
-                Contributors: {item.contributors.join(', ')}
-              </li>
-            ))
-          ) : (
-            <p>No results found.</p>
-          )}
-        </ul>
-      </div>
+        {/* Choose page size */}
+        <div>
+          <label htmlFor="pageSize">Results per Page</label>
+          <select
+            id="pageSize"
+            value={pageSize}
+            onChange={handlePageSizeChange}
+          >
+            <option value={2}>2</option>
+            <option value={4}>4</option>
+            <option value={8}>8</option>
+          </select>
+        </div>
 
-      {/* Pagination */}
-      <div>
-        <button onClick={handlePreviousPage} disabled={page === 1}>
-          {'<'}
-        </button>
-        <span>
-          Page {page} of {totalPages}
-        </span>
-        <button onClick={handleNextPage} disabled={page === totalPages}>
-          {'>'}
-        </button>
+        {/* Results list */}
+        <div>
+          <h2>Search results</h2>
+          <ul>
+            {getPaginatedResults().length > 0 ? (
+              getPaginatedResults().map((item) => (
+                <li key={item.id}>
+                  <Link to={`/tools-services/${item.id}`}>
+                    <strong>{item.label}</strong>
+                  </Link>
+                  <br />
+                  Accessible at: {item.accessibleAt}
+                  <br />
+                  Contributors: {item.contributors.join(', ')}
+                </li>
+              ))
+            ) : (
+              <p>No results found.</p>
+            )}
+          </ul>
+        </div>
+
+        {/* Pagination */}
+        <div>
+          <button onClick={handlePreviousPage} disabled={page === 1}>
+            {'<'}
+          </button>
+          <span>
+            Page {page} of {totalPages}
+          </span>
+          <button onClick={handleNextPage} disabled={page === totalPages}>
+            {'>'}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
