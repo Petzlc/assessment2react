@@ -17,6 +17,9 @@ export default function App() {
   // Total amount of pages
   const [totalPages, setTotalPages] = useState(1);
 
+  // amount of items per page
+  const [totalItems, setTotalItems] = useState(0);
+
   // implement search function later
   const handelSearch = async () => {
     // console.log('Suche nach:', searchQuery);
@@ -34,10 +37,13 @@ export default function App() {
         },
       );
       // Put results in State
-      setResults(response.data.items);
+      setResults(response.data.items || []);
 
-      // calculate total amount of pages
-      setTotalPages(Math.ceil(response.data.totalItems / pageSize));
+      // Amount of items per page
+      setTotalItems(response.data.totalItems || 0);
+
+      // calculate total amount of pages, if no items set to 1
+      setTotalPages(Math.ceil(response.data.totalItems / pageSize || 1));
 
       // test in console
       console.log('Results:', response.data.items);
@@ -58,6 +64,11 @@ export default function App() {
     }
   };
 
+  const handlePageSizeChange = (event) => {
+    setPageSize(Number(event.target.value));
+    setPage(1);
+  };
+
   return (
     <div>
       <h1>Social Sciences & Humanities Open Marketplace</h1>
@@ -74,19 +85,33 @@ export default function App() {
         <button onClick={handelSearch}>Search</button>
       </div>
 
+      {/* Choose page size */}
+      <div>
+        <label htmlFor="pageSize">Results per Page</label>
+        <select id="pageSize" value={pageSize} onChange={handlePageSizeChange}>
+          <option value={2}>2</option>
+          <option value={4}>4</option>
+          <option value={8}>8</option>
+        </select>
+      </div>
+
       {/* Results list */}
       <div>
         <h2>Search results</h2>
         <ul>
-          {results.map((item) => (
-            <li key={item.id}>
-              <strong>{item.label}</strong>
-              <br />
-              Accessible at: {item.accessibleAt}
-              <br />
-              Contributors: {item.contributors.join(', ')}
-            </li>
-          ))}
+          {results.length > 0 ? (
+            results.map((item) => (
+              <li key={item.id}>
+                <strong>{item.label}</strong>
+                <br />
+                Accessible at: {item.accessibleAt}
+                <br />
+                Contributors: {item.contributors.join(', ')}
+              </li>
+            ))
+          ) : (
+            <p>No results found.</p>
+          )}
         </ul>
       </div>
 
