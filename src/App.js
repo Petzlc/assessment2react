@@ -18,38 +18,42 @@ export default function App() {
   const [totalPages, setTotalPages] = useState(1);
 
   // amount of items per page
-  const [totalItems, setTotalItems] = useState(0);
+  // const [totalItems, setTotalItems] = useState(0);
 
-  // implement search function later
+  // handle search
   const handelSearch = async () => {
     // console.log('Suche nach:', searchQuery);
     try {
       const response = await axios.get(
         'https://marketplace-api.sshopencloud.eu/api/item-search',
         {
-          // Parameters as stated inthe assessment
+          // Parameters as stated in the assessment
           params: {
             q: searchQuery,
             categories: 'tool-or-service',
-            page: page,
-            pageSize: pageSize,
           },
         },
       );
-      // Put results in State
-      setResults(response.data.items || []);
 
-      // Amount of items per page
-      setTotalItems(response.data.totalItems || 0);
+      const allResults = response.data.items || [];
+      setResults(allResults);
 
       // calculate total amount of pages, if no items set to 1
-      setTotalPages(Math.ceil(response.data.totalItems / pageSize || 1));
-
-      // test in console
-      console.log('Results:', response.data.items);
+      setTotalPages(Math.ceil(allResults.length / pageSize));
+      // reset to first page on new seearch
+      setPage(1);
     } catch (error) {
       console.error('Fehler bei der API-Anfrage:', error);
     }
+  };
+
+  // calculate visible results based on page and size
+  const getPaginatedResults = () => {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    // return only items for the current page
+    return results.slice(startIndex, endIndex);
   };
 
   const handleNextPage = () => {
@@ -65,7 +69,11 @@ export default function App() {
   };
 
   const handlePageSizeChange = (event) => {
-    setPageSize(Number(event.target.value));
+    const newSize = Number(event.target.value);
+    setPageSize(newSize);
+    // Update total pages based on new pageSize
+    setTotalPages(Math.ceil(results.length / newSize));
+    // Reset to first page on size change
     setPage(1);
   };
 
@@ -79,7 +87,6 @@ export default function App() {
           type="text"
           placeholder="Suchbegriff eingeben..."
           value={searchQuery}
-          // Aktualisiert den State bei Eingabe
           onChange={(event) => setSearchQuery(event.target.value)}
         />
         <button onClick={handelSearch}>Search</button>
@@ -99,8 +106,8 @@ export default function App() {
       <div>
         <h2>Search results</h2>
         <ul>
-          {results.length > 0 ? (
-            results.map((item) => (
+          {getPaginatedResults().length > 0 ? (
+            getPaginatedResults().map((item) => (
               <li key={item.id}>
                 <strong>{item.label}</strong>
                 <br />
