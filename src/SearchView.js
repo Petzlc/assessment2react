@@ -85,8 +85,8 @@ export default function SearchView() {
         <ul>
           {getPaginatedResults().length > 0 ? (
             getPaginatedResults().map((item) => (
-              <li key={item.id}>
-                <Link to={`/tools-services/${item.id}`}>
+              <li key={item.persistentId}>
+                <Link to={`/tools-services/${item.persistentId}`}>
                   <strong>{item.label}</strong>
                 </Link>
                 <br />
