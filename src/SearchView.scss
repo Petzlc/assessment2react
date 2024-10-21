@@ -29,6 +29,23 @@
       }
     }
   }
+
+  .page-size-selector {
+    display: flex;
+    justify-content: flex-end;
+    align-items: 20px;
+
+    label {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    select {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  }
   .results {
     background-color: white;
     padding: 20px;
