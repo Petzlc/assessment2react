@@ -1,3 +1,4 @@
+import './SearchView.scss';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -55,11 +56,11 @@ export default function SearchView() {
   };
 
   return (
-    <div>
+    <div className="search-container">
       <h1>Social Sciences & Humanities Open Marketplace</h1>
 
       {/* Search field */}
-      <div>
+      <div className="search-bar">
         <input
           type="text"
           placeholder="Suchbegriff eingeben..."
@@ -70,7 +71,7 @@ export default function SearchView() {
       </div>
 
       {/* Choose page size */}
-      <div>
+      <div className="page-size-selector">
         <label htmlFor="pageSize">Results per Page</label>
         <select id="pageSize" value={pageSize} onChange={handlePageSizeChange}>
           <option value={2}>2</option>
@@ -80,7 +81,7 @@ export default function SearchView() {
       </div>
 
       {/* Results list */}
-      <div>
+      <div className="results">
         <h2>Search results</h2>
         <ul>
           {getPaginatedResults().length > 0 ? (
@@ -102,7 +103,7 @@ export default function SearchView() {
       </div>
 
       {/* Pagination */}
-      <div>
+      <div className="pagination">
         <button onClick={handlePreviousPage} disabled={page === 1}>
           {'<'}
         </button>
