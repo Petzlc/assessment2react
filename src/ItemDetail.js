@@ -1,3 +1,4 @@
+import './ItemDetail.scss';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -34,7 +35,7 @@ export default function ItemDetail() {
   }
 
   return (
-    <div>
+    <div className="item-detail-container">
       <h1>{itemDetails.label}</h1>
       <p>
         <strong>Accessible at:</strong> {itemDetails.accessibleAt}
@@ -42,6 +43,9 @@ export default function ItemDetail() {
       <p>
         <strong>Contributors:</strong> {itemDetails.contributors.join(', ')}
       </p>
+      <a className="back-button" href="/">
+        Back to Search
+      </a>
     </div>
   );
 }
